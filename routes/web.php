@@ -13,10 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('patient-portal/index');
 });
 
 Route::get('/portal-login', function () {
     return view('admin-portal/login');
+});
+
+Route::get('/admin-portal', function () {
+    return view('admin-portal/index');
 });
