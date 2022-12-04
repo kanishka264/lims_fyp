@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PatientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +20,17 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', function () {
-    return view('patient-portal/index');
+    return view('index');
 });
+
+Route::get('/register',[UserController::class, 'registerPageView']);
+Route::post('/register-patient',[UserController::class, 'registerPatient']);
+Route::get('/otp',[UserController::class, 'otpPageView']);
+Route::post('/otp-confirm',[UserController::class, 'otpConfirm']);
+Route::get('/login',[UserController::class, 'loginPageView']);
+Route::post('/login',[UserController::class, 'patientLogin']);
+
+Route::get('/my-portal',[PatientController::class, 'patientPortal']);
 
 Route::get('/portal-login', function () {
     return view('admin-portal/login');

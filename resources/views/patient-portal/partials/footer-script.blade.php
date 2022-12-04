@@ -27,3 +27,6 @@
 		<script src="{{ asset('website/assets/js/plugins.js')}}"></script>
 		<!-- main js -->
 		<script src="{{ asset('website/assets/js/main.min.js')}}"></script>
+
+		<script src="{{ asset('admin/assets/libs/jquery-validation/jquery.validate.min.js') }}"></script>
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

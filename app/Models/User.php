@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 
 class User extends Authenticatable
 {
@@ -41,4 +44,32 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function insert($data){
+        $status = DB::table('users')->insert($data);
+        return $status;
+    }
+
+    public function updateUser($data,$id){
+
+        $status = DB::table('users')->where('id', $id)->update($data);
+        return $status;
+    }
+
+    public function verifyOtp($mobile,$otp){
+        $results = DB::table('users')
+            ->where('mobile', '=', $mobile)
+            ->where('remember_token', '=', md5($otp))
+            ->first();
+        return $results;
+    }
+
+    public function getByMobile($mobile){
+        $results = DB::table('users')
+            ->where('mobile', '=', $mobile)
+            ->first();
+        return $results;
+    }
+
+
 }
