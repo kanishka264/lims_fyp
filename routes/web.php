@@ -35,6 +35,8 @@ Route::get('/my-portal',[PatientController::class, 'patientPortal']);
 
 Route::post('/add-item-to-cart',[CartController::class,'addItem']);
 
+Route::get('/cart',[CartController::class,'cartView']);
+
 
 Route::get('/portal-login', function () {
     return view('admin-portal/login');

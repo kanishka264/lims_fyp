@@ -16,4 +16,11 @@ class LabTest extends Model
             ->get();
         return $results;
     }
+
+    public function getById($id){
+        $results = DB::table('lab_test_type')
+            ->where('id', '=', $id)
+            ->first();
+        return $results;
+    }
 }

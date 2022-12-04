@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Throwable;
 use App\Models\UserSession;
+use App\Models\LabTest;
 
 class CartController extends Controller
 {
     public function __construct()
     {
         $this->session = new UserSession();
+        $this->labtest = new LabTest();
     }
 
     public function addItem(Request $request){
@@ -37,6 +39,21 @@ class CartController extends Controller
         }
 
         return $response;
+    }
+
+    public function cartView(){
+        $cartArray = Session::get('cart_item');
+        $cartItemArray = [];
+        $cartTotal = 0;
+        foreach($cartArray as $key=>$item){
+            $testData = $this->labtest->getById($item);
+            $cartTotal = $cartTotal + $testData->amount;
+
+            array_push($cartItemArray,$testData);
+
+        }
+        
+        return view('cart',['cartItemArray'=>$cartItemArray,'cartTotal'=>$cartTotal] );
     }
 
     
