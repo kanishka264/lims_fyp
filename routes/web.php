@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\HomePageController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,22 +17,24 @@ use App\Http\Controllers\PatientController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/',[HomePageController::class, 'homePageView']);
 
 Route::get('/register',[UserController::class, 'registerPageView']);
+
 Route::post('/register-patient',[UserController::class, 'registerPatient']);
+
 Route::get('/otp',[UserController::class, 'otpPageView']);
+
 Route::post('/otp-confirm',[UserController::class, 'otpConfirm']);
+
 Route::get('/login',[UserController::class, 'loginPageView']);
+
 Route::post('/login',[UserController::class, 'patientLogin']);
 
 Route::get('/my-portal',[PatientController::class, 'patientPortal']);
+
+Route::post('/add-item-to-cart',[CartController::class,'addItem']);
+
 
 Route::get('/portal-login', function () {
     return view('admin-portal/login');

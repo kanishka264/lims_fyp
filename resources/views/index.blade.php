@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Laboratory management system | Suhada Laboratories</title>
     <meta name="description" content="Hurst – Furniture Store eCommerce HTML Template is a clean and elegant design – suitable for selling flower, cookery, accessories, fashion, high fashion, accessories, digital, kids, watches, jewelries, shoes, kids, furniture, sports….. It has a fully responsive width adjusts automatically to any screen size or resolution.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -199,99 +200,82 @@
                             <h2 class="title-border">Featured Lab Testing</h2>
                         </div>
                         <div class="product-slider style-1 arrow-left-right">
+                            @foreach($lab_testing_list as $test):
                             <!-- Single-product start -->
                             <div class="single-product">
                                 <div class="product-img">
-                                    <span class="pro-label new-label">new</span>
                                     <a href=""><img src="{{asset('website/assets/img/product/1.jpg')}}" alt="" /></a>
                                     <div class="product-action clearfix">
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#productModal" title="Quick View"><i class="zmdi zmdi-zoom-in"></i></a>
-                                        <a href="" data-bs-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="zmdi zmdi-shopping-cart-plus"></i></a>
+                                        <a href="javascript:;" onclick="addItemToCart('{{ $test->id }}')" data-bs-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="zmdi zmdi-shopping-cart-plus"></i></a>
                                     </div>
                                 </div>
                                 <div class="product-info clearfix">
                                     <div class="fix">
-                                        <h4 class="post-title floatleft"><a href="#">dummy Product name</a></h4>
+                                        <h4 class="post-title floatleft"><a href="#">{{ $test->test_title }}({{ $test->test_code }})</a></h4>
                                     </div>
                                     <div class="fix">
-                                        <span class="pro-price floatleft">$ 56.20</span>
-                                       
+                                        <span class="pro-price floatleft">LKR {{ $test->amount }}</span>
+
                                     </div>
                                 </div>
                             </div>
                             <!-- Single-product end -->
-                            
+
+
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- PRODUCT-AREA END -->
-        
-        @include('patient-portal/partials/footer')
-        <!-- QUICKVIEW PRODUCT -->
-        <div id="quickview-wrapper">
-            <!-- Modal -->
-            <div class="modal fade" id="productModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="modal-product">
-                                <div class="product-images">
-                                    <div class="main-image images">
-                                        <img alt="#" src="img/product/quickview-photo.jpg" />
-                                    </div>
-                                </div><!-- .product-images -->
 
-                                <div class="product-info">
-                                    <h1>Aenean eu tristique</h1>
-                                    <div class="price-box-3">
-                                        <hr />
-                                        <div class="s-price-box">
-                                            <span class="new-price">$160.00</span>
-                                            <span class="old-price">$190.00</span>
-                                        </div>
-                                        <hr />
-                                    </div>
-                                    <a href="shop.html" class="see-all">See all features</a>
-                                    <div class="quick-add-to-cart">
-                                        <form method="post" class="cart">
-                                            <div class="numbers-row">
-                                                <input type="number" id="french-hens" value="3" min="1">
-                                            </div>
-                                            <button class="single_add_to_cart_button" type="submit">Add to cart</button>
-                                        </form>
-                                    </div>
-                                    <div class="quick-desc">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero.
-                                    </div>
-                                    <div class="social-sharing">
-                                        <div class="widget widget_socialsharing_widget">
-                                            <h3 class="widget-title-modal">Share this product</h3>
-                                            <ul class="social-icons">
-                                                <li><a target="_blank" title="Google +" href="#" class="gplus social-icon"><i class="zmdi zmdi-google-plus"></i></a></li>
-                                                <li><a target="_blank" title="Twitter" href="#" class="twitter social-icon"><i class="zmdi zmdi-twitter"></i></a></li>
-                                                <li><a target="_blank" title="Facebook" href="#" class="facebook social-icon"><i class="zmdi zmdi-facebook"></i></a></li>
-                                                <li><a target="_blank" title="LinkedIn" href="#" class="linkedin social-icon"><i class="zmdi zmdi-linkedin"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div><!-- .product-info -->
-                            </div><!-- .modal-product -->
-                        </div><!-- .modal-body -->
-                    </div><!-- .modal-content -->
-                </div><!-- .modal-dialog -->
-            </div>
-            <!-- END Modal -->
-        </div>
-        <!-- END QUICKVIEW PRODUCT -->
+        @include('patient-portal/partials/footer')
+
 
     </div>
     <!-- WRAPPER END -->
     @include('patient-portal/partials/footer-script')
+
+    <script>
+        function addItemToCart($id) {
+            $.ajax({
+                type: "POST",
+                url: '/add-item-to-cart',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: 'id='+$id,
+                success: function(msg) {
+
+                    if (msg[0].response_code == 200) {
+                        swal({
+                            title: 'Success!',
+                            text: msg[0].response_text,
+                            icon: 'success',
+                            timer: 2000,
+                            button: false
+                        });
+                        $('#cartCount').html(msg[0].cartCount);
+                    } else {
+                        swal({
+                            title: 'Error!',
+                            text: msg[0].response_text,
+                            icon: 'error',
+                            timer: 2000,
+                            button: false
+                        }).then(
+                            function() {},
+                            function(dismiss) {
+                                if (dismiss === 'timer') {}
+                            }
+                        )
+                    }
+
+                }
+            });
+        }
+    </script>
 
 </body>
 

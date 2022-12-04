@@ -37,11 +37,11 @@
 							<li>
 								<a class="cart-icon" href="#">
 									<i class="zmdi zmdi-shopping-cart"></i>
-									<span>3</span>
+									<span id="cartCount">3</span>
 								</a>
 								<div class="mini-cart-brief text-left">
 									<div class="cart-items">
-										<p class="mb-0">You have <span>03 items</span> in your shopping bag</p>
+										<p class="mb-0">You have <span> 03 items</span> in your shopping bag</p>
 									</div>
 									<div class="all-cart-product clearfix">
 										<div class="single-cart clearfix">
