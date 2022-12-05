@@ -12,4 +12,10 @@ class Common extends Model
     public function getOtp(){
         return 1234;
     }
+
+    public function generateBarcode($id){
+        $randomNo = rand(10000000000, 99999999999);
+        $barcode = $randomNo.$id;
+        return $barcode;
+    }
 }

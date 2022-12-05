@@ -5,6 +5,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +39,9 @@ Route::post('/add-item-to-cart',[CartController::class,'addItem']);
 
 Route::get('/cart',[CartController::class,'cartView']);
 
+Route::get('/checkout',[CheckoutController::class, 'checkoutView']);
+
+Route::post('/place-order',[OrderController::class, 'orderPlace']);
 
 Route::get('/portal-login', function () {
     return view('admin-portal/login');

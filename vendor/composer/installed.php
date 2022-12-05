@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '9ecc0642d02b894a03d7e947b8c636c91b213ee0',
+        'reference' => '9884bf19501e3c568818e22de20f366ff0bb43e0',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -409,7 +409,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '9ecc0642d02b894a03d7e947b8c636c91b213ee0',
+            'reference' => '9884bf19501e3c568818e22de20f366ff0bb43e0',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -651,6 +651,15 @@
             'aliases' => array(),
             'reference' => '851867efcbb6a1b992ec515c71cdcf20d895e9d2',
             'dev_requirement' => true,
+        ),
+        'picqer/php-barcode-generator' => array(
+            'pretty_version' => 'v2.2.4',
+            'version' => '2.2.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../picqer/php-barcode-generator',
+            'aliases' => array(),
+            'reference' => 'b98f110cc5a79f723688fb17fd90b9325300d844',
+            'dev_requirement' => false,
         ),
         'psr/container' => array(
             'pretty_version' => '1.1.2',

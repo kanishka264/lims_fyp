@@ -90,7 +90,7 @@
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                    <a type="submit" data-text="Proceed to Checkout" class="button-one submit-button mt-15">Proceed to Checkout</a>
+                                                    <a  href="{{url('checkout')}}" type="submit" data-text="Proceed to Checkout" class="button-one submit-button mt-15">Proceed to Checkout</a>
                                                 </div>
                                             </div>
                                         </div>

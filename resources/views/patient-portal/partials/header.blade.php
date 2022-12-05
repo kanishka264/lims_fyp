@@ -37,9 +37,15 @@
 							<li>
 								<a class="cart-icon" href="{{url('cart')}}">
 									<i class="zmdi zmdi-shopping-cart"></i>
-									<span id="cartCount"> {{ count(Session::get('cart_item')) }}</span>
+									<span id="cartCount">
+										@if(session()->has('cart_item'))
+										{{ count(Session::get('cart_item')) }}
+										@else
+										0
+										@endif
+										</span>
 								</a>
-								
+
 							</li>
 						</ul>
 					</div>
@@ -96,7 +102,7 @@
 								</ul>
 							</li>
 							<li><a href="">Navigation</a></li>
-							
+
 						</ul>
 					</nav>
 				</div>

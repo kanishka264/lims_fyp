@@ -71,5 +71,12 @@ class User extends Authenticatable
         return $results;
     }
 
+    public function getById($id){
+        $results = DB::table('users')
+            ->where('id', '=', $id)
+            ->first();
+        return $results;
+    }
+
 
 }
