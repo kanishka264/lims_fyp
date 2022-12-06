@@ -20,12 +20,13 @@ class CheckoutController extends Controller
     }
     public function checkoutView(Request $request)
     {
-        if (session()->has('user_data')) {
+        if (session()->has('user_data') ) {
             $userData = request()->session()->get('user_data');
             $loggedUser = $this->user->getById($userData['id']);
             $cartArray = Session::get('cart_item');
             $cartItemArray = [];
             $cartTotal = 0;
+            
             foreach ($cartArray as $key => $item) {
                 $testData = $this->labtest->getById($item);
                 $cartTotal = $cartTotal + $testData->amount;

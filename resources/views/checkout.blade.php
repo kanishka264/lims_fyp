@@ -117,7 +117,7 @@
                 success: function(msg) {
 
                     if (msg[0].response_code == 200) {
-                        location.href = 'pay-online';
+                        location.href = 'payment';
                         
                     } else {
                         swal({

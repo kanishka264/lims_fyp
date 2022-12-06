@@ -64,6 +64,7 @@ class OrderController extends Controller
                 
                 
             }
+            session(['amount_to_be_pay' => $cartTotal]);
 
             $updateOrderData = array(
                 'order_total'=>$cartTotal,
@@ -86,5 +87,12 @@ class OrderController extends Controller
             $response[0]['response_text'] = $e->getMessage();
         }
         return $response;
+    }
+
+
+    public function paymentSuccess(Request $request){
+
+        return view('payment-success');
+
     }
 }

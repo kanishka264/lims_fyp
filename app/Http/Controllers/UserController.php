@@ -45,17 +45,17 @@ class UserController extends Controller
                 'date_of_birth' => $request->post('dob'),
                 'gender' => strtolower($request->post('gender')),
                 'created_at' => date('Y-m-d H:i:s'),
-                'password' =>'',
+                'password' =>  Hash::make($otp),
                 'remember_token' => md5($otp)
             );
 
             $store = $this->user->insert($userData);
             if ($store) {
-                $sendSms = $this->sms->send($request->post('mobile'),$otp);
+                $sendSms = $this->sms->send($request->post('mobile'), $otp);
                 $response[0]['response_code'] = 200;
                 $response[0]['response_text'] = "Successfully saved";
                 $response[0]['mobile'] = $request->post('mobile');
-            }else{
+            } else {
                 $response[0]['response_code'] = 400;
                 $response[0]['response_text'] = "Something went wrong. Please try again";
             }
@@ -67,71 +67,87 @@ class UserController extends Controller
         return $response;
     }
 
-    public function otpPageView(Request $request){
+    public function otpPageView(Request $request)
+    {
         $mobile = $_GET['mobile'];
         return view('otp');
     }
 
-    public function otpConfirm(Request $request){
+    public function otpConfirm(Request $request)
+    {
 
-        try{
+        try {
             $mobile = $request->post('mobile');
             $otp = $request->post('otp');
-    
-            $verify = $this->user->verifyOtp($mobile,$otp);
 
-            if($verify){
-                
-                $set_login = $this->session->setPatient($verify);
-                 
-                $response[0]['response_code'] = 200;
-                $response[0]['response_text'] = "Success";
-            }else{
+            $verify = $this->user->verifyOtp($mobile, $otp);
+
+            if ($verify) {
+                $email = $verify->email;
+
+                $request->request->add(['email' => $verify->email]);
+                $request->request->add(['password' => $otp]);
+
+                $validator = Validator::make($request->all() + ['email' => $email], [
+                    'email' => 'required|email',
+                    'otp' => 'required',
+                ]);
+                $credentials = $request->only('email', 'password');
+
+                if (Auth::attempt($credentials)) {
+                    $set_login = $this->session->setPatient($verify);
+
+                    $response[0]['response_code'] = 200;
+                    $response[0]['response_text'] = "Success";
+                } else {
+                    $response[0]['response_code'] = 400;
+                    $response[0]['response_text'] = "Something went wrong. Please try again";
+                }
+            } else {
                 $response[0]['response_code'] = 400;
                 $response[0]['response_text'] = "Something went wrong. Please try again";
             }
-
-        }catch(Throwable $e){
+        } catch (Throwable $e) {
             $response[0]['response_code'] = 403;
             $response[0]['response_text'] = $e->getMessage();
         }
         return $response;
-
     }
 
-    public function loginPageView(Request $request){
+    public function loginPageView(Request $request)
+    {
         return view('login');
     }
 
-    public function patientLogin(Request $request){
+    public function patientLogin(Request $request)
+    {
         try {
             $user = $this->user->getByMobile($request->post('mobile'));
-            if($user){
-               
+            if ($user) {
+
                 $otp = $this->common->getOtp();
                 $userData = array(
                     'remember_token' => md5($otp),
-                    'updated_at'=> date("Y-m-d H:i:s")
+                    'updated_at' => date("Y-m-d H:i:s")
                 );
-    
+
                 $id = $user->id;
-    
-                $store = $this->user->updateUser($userData,$id);
+
+                $store = $this->user->updateUser($userData, $id);
 
                 if ($store) {
-                    $sendSms = $this->sms->send($request->post('mobile'),$otp);
+                    $sendSms = $this->sms->send($request->post('mobile'), $otp);
                     $response[0]['response_code'] = 200;
                     $response[0]['response_text'] = "Successfully saved";
                     $response[0]['mobile'] = $request->post('mobile');
-                }else{
+                } else {
                     $response[0]['response_code'] = 400;
                     $response[0]['response_text'] = "Something went wrong. Please try again";
                 }
-            }else{
+            } else {
                 $response[0]['response_code'] = 400;
                 $response[0]['response_text'] = "No account found";
             }
-            
         } catch (Throwable $e) {
             $response[0]['response_code'] = 403;
             $response[0]['response_text'] = $e->getMessage();

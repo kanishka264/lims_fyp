@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '9884bf19501e3c568818e22de20f366ff0bb43e0',
+        'reference' => '7c43fd9eeba4f1d3c8dc1a043f8408ba371c8407',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -17,6 +17,15 @@
             'install_path' => __DIR__ . '/../asm89/stack-cors',
             'aliases' => array(),
             'reference' => '73e5b88775c64ccc0b84fb60836b30dc9d92ac4a',
+            'dev_requirement' => false,
+        ),
+        'braintree/braintree_php' => array(
+            'pretty_version' => '6.10.0',
+            'version' => '6.10.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../braintree/braintree_php',
+            'aliases' => array(),
+            'reference' => '27f27bc9402deb695335556751e15a7910025ca4',
             'dev_requirement' => false,
         ),
         'brick/math' => array(
@@ -409,7 +418,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '9884bf19501e3c568818e22de20f366ff0bb43e0',
+            'reference' => '7c43fd9eeba4f1d3c8dc1a043f8408ba371c8407',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(

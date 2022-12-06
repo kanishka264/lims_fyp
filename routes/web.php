@@ -7,6 +7,8 @@ use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\BraintreeController;
+use App\Http\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,10 @@ use App\Http\Controllers\OrderController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/payment-fail',function(){
+    return view('payment-fail');
+});
 
 Route::get('/',[HomePageController::class, 'homePageView']);
 
@@ -42,6 +48,12 @@ Route::get('/cart',[CartController::class,'cartView']);
 Route::get('/checkout',[CheckoutController::class, 'checkoutView']);
 
 Route::post('/place-order',[OrderController::class, 'orderPlace']);
+
+Route::any('/payment', [BraintreeController::class, 'token'])->middleware('auth');
+
+Route::get('/payment-success',[OrderController::class, 'paymentSuccess']);
+
+// Route::any('/payment', [BraintreeController::class, 'token'])->name('token')->middleware('auth');
 
 Route::get('/portal-login', function () {
     return view('admin-portal/login');

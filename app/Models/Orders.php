@@ -36,4 +36,14 @@ class Orders extends Model
         $results = DB::table('orders')->where('id',$id)->update($data);
         return $results;
     }
+
+    public function savePayment($data){
+        $results = DB::table('payments')->insert($data);
+        return $results;
+    }
+
+    public function updateOrders($data,$orderNo){
+        $results = DB::table('test_orders')->where('order_no',$orderNo)->update($data);
+        return $results;
+    }
 }
