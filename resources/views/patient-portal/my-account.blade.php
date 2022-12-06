@@ -44,86 +44,38 @@
                                                 <table>
                                                     <thead>
                                                         <tr>
-                                                            <th class="product-thumbnail">Product</th>
-                                                            <th class="product-price">Price</th>
-                                                            <th class="product-stock">stock status</th>
-                                                            <th class="product-add-cart">Add to cart</th>
-                                                            <th class="product-remove">Remove</th>
+                                                            <th class="product-thumbnail">Test</th>
+                                                            <th class="product-price">Paid Amount</th>
+                                                            <th class="product-stock">Appointment Date</th>
+                                                            <th class="product-add-cart">Report Status</th>
+                                                            <th class="product-remove"></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        @foreach($orderHistory as $test)
                                                         <tr>
                                                             <td class="product-thumbnail  text-left">
                                                                 <!-- Single-product start -->
                                                                 <div class="single-product">
-                                                                    <div class="product-img">
-                                                                        <a href="single-product.html"><img src="img/product/2.jpg" alt="" /></a>
-                                                                    </div>
+                                                                    
                                                                     <div class="product-info">
-                                                                        <h4 class="post-title"><a class="text-light-black" href="#">dummy product name</a></h4>
-                                                                        <p class="mb-0">Color : Black</p>
-                                                                        <p class="mb-0">Size : SL</p>
+                                                                        <h4 class="post-title"><a class="text-light-black" href="#">{{ $test->test_title }} ({{ $test->test_code }})</a></h4>
+                                                                        
                                                                     </div>
                                                                 </div>
                                                                 <!-- Single-product end -->
                                                             </td>
-                                                            <td class="product-price">$56.00</td>
-                                                            <td class="product-stock">in stock</td>
+                                                            <td class="product-price">LKR {{ $test->fee }}</td>
+                                                            <td class="product-stock">{{ $test->appointment_time }}</td>
                                                             <td class="product-add-cart">
-                                                                <a class="text-light-black" href="#"><i class="zmdi zmdi-shopping-cart-plus"></i></a>
+                                                                pending
                                                             </td>
                                                             <td class="product-remove">
-                                                                <a href="#"><i class="zmdi zmdi-close"></i></a>
+                                                                <a href="#">View Report</a>
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td class="product-thumbnail  text-left">
-                                                                <!-- Single-product start -->
-                                                                <div class="single-product">
-                                                                    <div class="product-img">
-                                                                        <a href="single-product.html"><img src="img/product/12.jpg" alt="" /></a>
-                                                                    </div>
-                                                                    <div class="product-info">
-                                                                        <h4 class="post-title"><a class="text-light-black" href="#">dummy product name</a></h4>
-                                                                        <p class="mb-0">Color : Black</p>
-                                                                        <p class="mb-0">Size : SL</p>
-                                                                    </div>
-                                                                </div>
-                                                                <!-- Single-product end -->
-                                                            </td>
-                                                            <td class="product-price">$56.00</td>
-                                                            <td class="product-stock">in stock</td>
-                                                            <td class="product-add-cart">
-                                                                <a class="text-light-black" href="#"><i class="zmdi zmdi-shopping-cart-plus"></i></a>
-                                                            </td>
-                                                            <td class="product-remove">
-                                                                <a href="#"><i class="zmdi zmdi-close"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="product-thumbnail  text-left">
-                                                                <!-- Single-product start -->
-                                                                <div class="single-product">
-                                                                    <div class="product-img">
-                                                                        <a href="single-product.html"><img src="img/product/6.jpg" alt="" /></a>
-                                                                    </div>
-                                                                    <div class="product-info">
-                                                                        <h4 class="post-title"><a class="text-light-black" href="#">dummy product name</a></h4>
-                                                                        <p class="mb-0">Color : Black</p>
-                                                                        <p class="mb-0">Size : SL</p>
-                                                                    </div>
-                                                                </div>
-                                                                <!-- Single-product end -->
-                                                            </td>
-                                                            <td class="product-price">$56.00</td>
-                                                            <td class="product-stock">in stock</td>
-                                                            <td class="product-add-cart">
-                                                                <a class="text-light-black" href="#"><i class="zmdi zmdi-shopping-cart-plus"></i></a>
-                                                            </td>
-                                                            <td class="product-remove">
-                                                                <a href="#"><i class="zmdi zmdi-close"></i></a>
-                                                            </td>
-                                                        </tr>
+                                                        @endforeach
+                                                        
                                                     </tbody>
                                                 </table>
                                             </div>

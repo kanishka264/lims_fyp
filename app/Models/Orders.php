@@ -46,4 +46,14 @@ class Orders extends Model
         $results = DB::table('test_orders')->where('order_no',$orderNo)->update($data);
         return $results;
     }
+
+    public function getTestOrdersByUserId($userId){
+        $results = DB::table('test_orders')
+            ->select('test_orders.*','lab_test_type.test_title','lab_test_type.test_code','lab_test_type.report_template')
+            ->join('lab_test_type', 'test_orders.test_id', '=', 'lab_test_type.id')
+            ->where('test_orders.payment_status', '=','1000')
+            ->orderBy('test_orders.id', 'DESC')
+            ->get();
+        return $results;
+    }
 }
