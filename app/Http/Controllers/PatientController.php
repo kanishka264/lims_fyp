@@ -25,8 +25,17 @@ class PatientController extends Controller
     }
 
     public function patientPortal(){
-        dd(request()->session()->get('user_data'));
+        if(Auth::check()){
+            $userData = request()->session()->get('user_data');
+            $loggedUser = $this->user->getById($userData['id']);
+            return view('patient-portal.my-account',['loggedUser'=>$loggedUser]);
+        }else{
+            return redirect('/login');
+        }
+        
+
     }
+
 
     //
 }

@@ -21,9 +21,7 @@ use App\Http\Middleware;
 |
 */
 
-Route::get('/payment-fail',function(){
-    return view('payment-fail');
-});
+
 
 Route::get('/',[HomePageController::class, 'homePageView']);
 
@@ -41,6 +39,8 @@ Route::post('/login',[UserController::class, 'patientLogin']);
 
 Route::get('/my-portal',[PatientController::class, 'patientPortal']);
 
+Route::post('/update-patient',[UserController::class, 'updatePatient']);
+
 Route::post('/add-item-to-cart',[CartController::class,'addItem']);
 
 Route::get('/cart',[CartController::class,'cartView']);
@@ -53,6 +53,13 @@ Route::any('/payment', [BraintreeController::class, 'token'])->middleware('auth'
 
 Route::get('/payment-success',[OrderController::class, 'paymentSuccess']);
 
+Route::get('/payment-fail',function(){
+    return view('payment-fail');
+});
+
+Route::get('/barcode',function(){
+    return view('tes');
+});
 // Route::any('/payment', [BraintreeController::class, 'token'])->name('token')->middleware('auth');
 
 Route::get('/portal-login', function () {

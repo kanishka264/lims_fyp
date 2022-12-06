@@ -43,7 +43,7 @@
 										@else
 										0
 										@endif
-										</span>
+									</span>
 								</a>
 
 							</li>
@@ -75,7 +75,9 @@
 						</ul>
 					</div>
 				</li>
-				<li><a href="">Navigation</a></li>
+				<li><a href="{{ url('/login') }}">Login</a></li>
+				<li><a href="{{ url('/register') }}">Register</a></li>
+				<li><a href="{{ url('/my-portal') }}">My Account</a></li>
 
 			</ul>
 		</nav>
@@ -101,7 +103,9 @@
 
 								</ul>
 							</li>
-							<li><a href="">Navigation</a></li>
+							<li><a href="{{ url('/login') }}">Login</a></li>
+							<li><a href="{{ url('/register') }}">Register</a></li>
+							<li><a href="{{ url('/my-portal') }}">My Account</a></li>
 
 						</ul>
 					</nav>

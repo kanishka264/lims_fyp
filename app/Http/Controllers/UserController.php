@@ -155,4 +155,37 @@ class UserController extends Controller
 
         return $response;
     }
+
+    public function updatePatient(Request $request)
+    {
+
+        try {
+            $userData = array(
+                'first_name' => strtolower($request->post('first_name')),
+                'last_name' => strtolower($request->post('last_name')),
+                'email' => $request->post('email'),
+                'user_role' => 'patient',
+                'nic' => strtolower($request->post('nic')),
+                'mobile' => $request->post('mobile'),
+                'date_of_birth' => $request->post('dob'),
+                'gender' => strtolower($request->post('gender')),
+                'updated_at' => date('Y-m-d H:i:s'),
+            );
+
+
+            $store = $this->user->updateUser($userData,$request->post('id'));
+            if ($store) {
+                $response[0]['response_code'] = 200;
+                $response[0]['response_text'] = "Successfully updated";
+            } else {
+                $response[0]['response_code'] = 400;
+                $response[0]['response_text'] = "Something went wrong. Please try again";
+            }
+        } catch (Throwable $e) {
+            $response[0]['response_code'] = 403;
+            $response[0]['response_text'] = $e->getMessage();
+        }
+
+        return $response;
+    }
 }
