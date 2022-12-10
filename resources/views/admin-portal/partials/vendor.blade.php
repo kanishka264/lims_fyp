@@ -6,3 +6,4 @@
 <script src="{{ asset('admin/assets/libs/waypoints/lib/jquery.waypoints.min.js')}}"></script>
 <script src="{{ asset('admin/assets/libs/jquery.counterup/jquery.counterup.min.js')}}"></script>
 <script src="{{ asset('admin/assets/libs/feather-icons/feather.min.js')}}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

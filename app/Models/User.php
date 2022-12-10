@@ -78,5 +78,12 @@ class User extends Authenticatable
         return $results;
     }
 
+    public function getByUserCategory($cat){
+        $results = DB::table('users')
+            ->where('user_role', '=', $cat)
+            ->get();
+        return $results;
+    }
+
 
 }

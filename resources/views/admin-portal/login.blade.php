@@ -8,6 +8,8 @@
         <meta content="Coderthemes" name="author" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <!-- App favicon -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <link rel="shortcut icon" href="{{asset('admin/assets/images/favicon.ico')}}">
 
 		<!-- App css -->
@@ -40,15 +42,15 @@
                                     <h4 class="text-uppercase mt-0">Sign In</h4>
                                 </div>
 
-                                <form action="#">
+                                <form id="login_form">
                                     <div class="mb-3">
                                         <label for="emailaddress" class="form-label">Email address</label>
-                                        <input class="form-control" type="email" id="emailaddress" required="" placeholder="Enter your email">
+                                        <input class="form-control" type="email" id="emailaddress" name="email" required="" placeholder="Enter your email">
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="password" class="form-label">Password</label>
-                                        <input class="form-control" type="password" required="" id="password" placeholder="Enter your password">
+                                        <input class="form-control" type="password" required="" name="password" id="password" placeholder="Enter your password">
                                     </div>
 
                                     
@@ -84,6 +86,51 @@
 
         <!-- App js -->
         <script src="{{asset('admin/assets/js/app.min.js')}}"></script>
-        
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script>
+        $('#login_form').on('submit', function(e) {
+
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: '/login-admin',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: $(this).serialize(),
+                success: function(msg) {
+                    
+                    if (msg[0].response_code == 200) {
+                        swal({
+                            title: 'Success!',
+                            text: msg[0].response_text,
+                            icon: 'success',
+                            timer: 2000,
+                            button: false
+                        });
+                        setTimeout(function(){
+                            location.href="/admin-portal"
+                        },1500)
+                    } else {
+                        swal({
+                            title: 'Error!',
+                            text: msg[0].response_text,
+                            icon: 'error',
+                            timer: 2000,
+                            button: false
+                        }).then(
+                            function() {},
+                            function(dismiss) {
+                                if (dismiss === 'timer') {}
+                            }
+                        )
+                    }
+
+                }
+            });
+
+        });
+    </script>
     </body>
 </html>

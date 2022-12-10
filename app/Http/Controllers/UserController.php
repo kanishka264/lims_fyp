@@ -41,7 +41,7 @@ class UserController extends Controller
                 'email' => $request->post('email'),
                 'user_role' => 'patient',
                 'nic' => strtolower($request->post('nic')),
-                'mobile' => $request->post('mobile'),
+                'mobile' => trim($request->post('mobile'), "0"),
                 'date_of_birth' => $request->post('dob'),
                 'gender' => strtolower($request->post('gender')),
                 'created_at' => date('Y-m-d H:i:s'),
@@ -173,7 +173,7 @@ class UserController extends Controller
             );
 
 
-            $store = $this->user->updateUser($userData,$request->post('id'));
+            $store = $this->user->updateUser($userData, $request->post('id'));
             if ($store) {
                 $response[0]['response_code'] = 200;
                 $response[0]['response_text'] = "Successfully updated";
@@ -188,4 +188,203 @@ class UserController extends Controller
 
         return $response;
     }
+
+    public function adminLogin(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            session(['user_role_type' => 'admin']);
+            $response[0]['response_code'] = 200;
+            $response[0]['response_text'] = "Success";
+        } else {
+            $response[0]['response_code'] = 400;
+            $response[0]['response_text'] = "Something went wrong. Please try again!";
+        }
+        return $response;
+    }
+
+    public function adminLoginPage()
+    {
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+            return redirect('/admin-portal');
+        } else {
+            return view('admin-portal/login');
+        }
+    }
+
+    public function createPationPage()
+    {
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+            return view('admin-portal/users/create-patient');
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    public function viewPationListPage()
+    {
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+            $patientList = $this->user->getByUserCategory('patient');
+            return view('admin-portal/users/view-patient', ['patientList' => $patientList]);
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    public function editPatient()
+    {
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+            $patientData = $this->user->getById(request()->get('id'));
+            return view('admin-portal/users/edit-patient', ['patientData' => $patientData]);
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+
+
+    public function updateUser(Request $request)
+    {
+
+        try {
+            $userData = array(
+                'first_name' => strtolower($request->post('first_name')),
+                'last_name' => strtolower($request->post('last_name')),
+                'email' => $request->post('email'),
+                'nic' => strtolower($request->post('nic')),
+                'mobile' => trim($request->post('mobile'), "0"),
+                'date_of_birth' => $request->post('dob'),
+                'gender' => strtolower($request->post('gender')),
+            );
+
+            $store = $this->user->updateUser($userData, $request->post('id'));
+            if ($store) {
+                $response[0]['response_code'] = 200;
+                $response[0]['response_text'] = "Successfully saved";
+                $response[0]['mobile'] = $request->post('mobile');
+            } else {
+                $response[0]['response_code'] = 400;
+                $response[0]['response_text'] = "Something went wrong. Please try again";
+            }
+        } catch (Throwable $e) {
+            $response[0]['response_code'] = 403;
+            $response[0]['response_text'] = $e->getMessage();
+        }
+
+        return $response;
+    }
+
+    public function createReceptionist()
+    {
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+            
+            return view('admin-portal/users/add-user');
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    
+    public function registerUser(Request $request){
+        try {
+            $userData = array(
+                'first_name' => strtolower($request->post('first_name')),
+                'last_name' => strtolower($request->post('last_name')),
+                'email' => $request->post('email'),
+                'user_role' => 'receptionist',
+                'mobile' => trim($request->post('mobile'), "0"),
+                'created_at' => date('Y-m-d H:i:s'),
+                'password' =>  Hash::make($request->post('password')),
+            );
+
+            $store = $this->user->insert($userData);
+            if ($store) {
+              
+                $response[0]['response_code'] = 200;
+                $response[0]['response_text'] = "Successfully saved";
+                
+            } else {
+                $response[0]['response_code'] = 400;
+                $response[0]['response_text'] = "Something went wrong. Please try again";
+            }
+        } catch (Throwable $e) {
+            $response[0]['response_code'] = 403;
+            $response[0]['response_text'] = $e->getMessage();
+        }
+
+        return $response;
+    }
+
+    public function viewUserListPage(){
+
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+            $userlist = $this->user->getByUserCategory('receptionist');
+            return view('admin-portal/users/user-list',['userlist' => $userlist]);
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    public function editUser()
+    {
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+            $userData = $this->user->getById(request()->get('id'));
+            return view('admin-portal/users/edit-user', ['userData' => $userData]);
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    public function updateUserAdmin(Request $request)
+    {
+
+        try {
+            if($request->post('password') != ''){
+                $userData = array(
+                    'first_name' => strtolower($request->post('first_name')),
+                    'last_name' => strtolower($request->post('last_name')),
+                    'email' => $request->post('email'),
+                    'mobile' => trim($request->post('mobile'), "0"),
+                    'password' =>  Hash::make($request->post('password')),
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+            }else{
+                $userData = array(
+                    'first_name' => strtolower($request->post('first_name')),
+                    'last_name' => strtolower($request->post('last_name')),
+                    'email' => $request->post('email'),
+                    'mobile' => trim($request->post('mobile'), "0"),
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+            }
+            
+
+            $store = $this->user->updateUser($userData, $request->post('id'));
+            if ($store) {
+                $response[0]['response_code'] = 200;
+                $response[0]['response_text'] = "Successfully saved";
+            } else {
+                $response[0]['response_code'] = 400;
+                $response[0]['response_text'] = "Something went wrong. Please try again";
+            }
+        } catch (Throwable $e) {
+            $response[0]['response_code'] = 403;
+            $response[0]['response_text'] = $e->getMessage();
+        }
+
+        return $response;
+    }
+    
 }

@@ -62,10 +62,33 @@ Route::get('/barcode',function(){
 });
 // Route::any('/payment', [BraintreeController::class, 'token'])->name('token')->middleware('auth');
 
-Route::get('/portal-login', function () {
-    return view('admin-portal/login');
-});
+
+Route::get('/portal-login',[UserController::class, 'adminLoginPage']);
+
+
+Route::post('/login-admin',[UserController::class, 'adminLogin']);
+
 
 Route::get('/admin-portal', function () {
     return view('admin-portal/index');
 });
+
+Route::get('/create-patient',[UserController::class, 'createPationPage']);
+Route::get('/patients-list',[UserController::class, 'viewPationListPage']);
+
+Route::get('/edit-patient-data',[UserController::class, 'editPatient']);
+
+Route::post('/update-patient',[UserController::class, 'updateUser']);
+
+Route::get('/create-receptionist',[UserController::class, 'createReceptionist']);
+
+Route::post('/register-user',[UserController::class, 'registerUser']);
+Route::get('/receptionist-list',[UserController::class, 'viewUserListPage']);
+
+Route::get('/edit-reciptienist-data',[UserController::class, 'editUser']);
+
+Route::post('/update-user',[UserController::class, 'updateUserAdmin']);
+
+Route::get('/appointment-verify-pending-list',[OrderController::class, 'verificationPending']);
+
+Route::get('/report-data',[OrderController::class, 'reportPageView']);

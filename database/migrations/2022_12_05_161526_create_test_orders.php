@@ -22,6 +22,8 @@ class CreateTestOrders extends Migration
             $table->timestamp('appointment_time')->nullable();
             $table->string('payment_referance')->nullable();
             $table->string('payment_status')->nullable();
+            $table->string('recived_status')->default(0);
+            $table->string('verified_status')->default(0);
             $table->longText('barcode')->nullable();
             $table->timestamps();
         });
