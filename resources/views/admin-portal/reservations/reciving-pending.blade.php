@@ -61,7 +61,7 @@
                                             <tr>
                                                 <td><?php echo ucwords($value->patient_name) ?></td>
                                                 <td><?php echo ucwords($value->test_title) ?> - <?php echo strtoupper($value->test_code) ?></td>
-                                                <td><?php echo $value->appointment_time ?></td>
+                                                <td class="d-flex"><input class="form-control" type="datetime-local" id="date_<?php echo $value->id ?>" value="<?php echo $value->appointment_time ?>"><button class="btn btn-info" onclick="changeAppoinment(<?php echo $value->id ?>)">Update</button></td>
                                                 <td><?php echo $value->age ?></td>
                                                 <?php if($value->verified_status == 1){
                                                     $msg = 'Verified';
@@ -161,6 +161,51 @@
                     setTimeout(function() {
                         location.reload();
                     }, 1500);
+
+                } else {
+                    swal({
+                        title: 'Error!',
+                        text: msg[0].response_text,
+                        icon: 'error',
+                        timer: 2000,
+                        button: false
+                    }).then(
+                        function() {},
+                        function(dismiss) {
+                            if (dismiss === 'timer') {}
+                        }
+                    )
+                }
+
+            }
+        });
+
+    }
+</script>
+
+<script>
+    function changeAppoinment($id) {
+        var field = 'date_'+$id;
+        var value = $('#'+field).val();
+        $.ajax({
+            type: "POST",
+            url: '/change-appointment',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: 'id='+$id+'&date='+value,
+            success: function(msg) {
+
+                if (msg[0].response_code == 200) {
+                    swal({
+                        title: 'Success!',
+                        text: msg[0].response_text,
+                        icon: 'success',
+                        timer: 2000,
+                        button: false
+                    });
+
+                  
 
                 } else {
                     swal({

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class Common extends Model
 {
@@ -25,5 +27,11 @@ class Common extends Model
     public function age($bithdate)
     {
         return Carbon::parse($bithdate)->age;
+    }
+    static function getLoggedUser(){
+        $userId = Auth::user()->id;
+        $user = new User();
+        $user_data = $user->getById($userId);
+        return  $user_data;
     }
 }

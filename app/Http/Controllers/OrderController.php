@@ -232,4 +232,73 @@ class OrderController extends Controller
             return redirect('/ portal-login');
         }
     }
+
+    public function changeAppintment(Request $request){
+        try{
+            $updateData = array(
+                'appointment_time' => $request->post('date'),
+                'updated_at' => date('Y-m-d H:i:s')
+            );
+            $update = $this->order->updateOrdersById($updateData,$request->post('id'));
+
+            if ($update) {
+                $response[0]['response_code'] = 200;
+                $response[0]['response_text'] = 'Success';
+            } else {
+                $response[0]['response_code'] = 400;
+                $response[0]['response_text'] = "Something went wrong. Please try again!";
+            }
+        }catch(Throwable $e){
+            $response[0]['response_code'] = 403;
+            $response[0]['response_text'] = $e->getMessage();
+        }
+        return $response;
+    }
+
+    public function openReportData(){
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+            $test_data = $this->order->getTestOrdersById(request()->get('id'));
+            $test_type = $this->labtest->getById($test_data->test_id);
+
+            return view('admin-portal/report/report',['test_data'=>$test_data,'test_type'=>$test_type]);
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    public function resultsSave(Request $request){
+        try{
+            $test_type = $this->labtest->getById($request->post('test_id'));
+            $field_set = explode(',', $test_type->test_field);
+
+            $data = array();
+            foreach ($field_set as $key => $value){
+
+                $data[$value] = $request->post($value);
+                
+
+            }
+
+            $updateData = array(
+                'results' => $data,
+                'updated_at' => date('Y-m-d H:i:s')
+            );
+            $update = $this->order->updateOrdersById($updateData,$request->post('id'));
+
+            if ($update) {
+                $response[0]['response_code'] = 200;
+                $response[0]['response_text'] = 'Success';
+            } else {
+                $response[0]['response_code'] = 400;
+                $response[0]['response_text'] = "Something went wrong. Please try again!";
+            }
+           
+
+        }catch(Throwable $e){
+            $response[0]['response_code'] = 403;
+            $response[0]['response_text'] = $e->getMessage();
+        }
+        return $response;
+    }
 }

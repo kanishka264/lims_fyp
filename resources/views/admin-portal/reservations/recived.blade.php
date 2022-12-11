@@ -72,7 +72,7 @@
                                                 <td>{{ $msg }}</td>
                                                 <td>
                                                     <a href="{{url('/barchode-print?id=')}}{{$value->barcode}}" target="_blank" class="btn btn-info">Barcode</a>
-                                                    <button class="btn btn-info">Print</button>
+                                                    <a href="{{url('/report-print?id=')}}{{$value->barcode}}" target="_blank" class="btn btn-info">Print</a>
                                                 </td>
                                             </tr>
 

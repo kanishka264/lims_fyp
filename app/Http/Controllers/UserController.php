@@ -386,5 +386,13 @@ class UserController extends Controller
 
         return $response;
     }
+
+    public function logout(){
+        Session::flush();
+
+        Auth::logout();
+
+        return redirect('portal-login');
+    }
     
 }

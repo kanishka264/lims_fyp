@@ -1,4 +1,6 @@
 <!-- ========== Left Sidebar Start ========== -->
+<?php $log_user_data = App\Models\Common::getLoggedUser(); ?>
+
 <div class="left-side-menu">
 
     <div class="h-100" data-simplebar>
@@ -9,21 +11,9 @@
             <img src="admin/assets/images/users/user-1.jpg" alt="user-img" title="Mat Helme" class="rounded-circle img-thumbnail avatar-md">
 
 
-            <p class="text-muted left-user-info">Admin Head</p>
+            <p class="text-muted left-user-info">{{ $log_user_data->first_name }}</p>
 
-            <ul class="list-inline">
-                <li class="list-inline-item">
-                    <a href="#" class="text-muted left-user-info">
-                        <i class="mdi mdi-cog"></i>
-                    </a>
-                </li>
-
-                <li class="list-inline-item">
-                    <a href="#">
-                        <i class="mdi mdi-power"></i>
-                    </a>
-                </li>
-            </ul>
+            
         </div>
 
         <!--- Sidemenu -->
@@ -42,7 +32,7 @@
                 </li>
 
                 <li class="menu-title mt-2">user management</li>
-
+                <?php if($log_user_data->user_role == 'admin'): ?>
                 <li>
                     <a href="#email" data-bs-toggle="collapse">
                         <i class="mdi mdi-email-outline"></i>
@@ -60,6 +50,7 @@
                         </ul>
                     </div>
                 </li>
+                <?php endif; ?>
 
                 <li>
                     <a href="#patient" data-bs-toggle="collapse">
@@ -80,6 +71,7 @@
                 </li>
 
                 <li class="menu-title mt-2">appointments management</li>
+                <?php if($log_user_data->user_role == 'admin'): ?>
                 <li class="active">
                     <a href="appointment-verify-pending-list" >
                         <i class="mdi mdi-view-dashboard-outline"></i>
@@ -94,6 +86,9 @@
                         <span> Verified Appointments </span>
                     </a>
                 </li>
+                <?php endif; ?>
+
+                <?php if($log_user_data->user_role == 'receptionist'): ?>
                 <li>
                     <a href="appointment-reciving-pending-list">
                         <i class="mdi mdi-view-dashboard-outline"></i>
@@ -108,6 +103,7 @@
                         <span> Recived Reports </span>
                     </a>
                 </li>
+                <?php endif; ?>
 
             </ul>
 

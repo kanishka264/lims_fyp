@@ -93,4 +93,13 @@ class Orders extends Model
         $results = DB::table('test_orders')->where('id', $id)->update($data);
         return $results;
     }
+
+    public function getTestOrdersByBarcode($id)
+    {
+        $results = DB::table('test_orders')
+            ->select('*')
+            ->where('barcode', '=', $id)
+            ->first();
+        return $results;
+    }
 }

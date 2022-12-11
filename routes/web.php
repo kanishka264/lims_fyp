@@ -22,9 +22,13 @@ use App\Http\Middleware;
 |
 */
 
+Route::get('/test',function(){
+    return view('report');
+});
 
 
 Route::get('/',[HomePageController::class, 'homePageView']);
+
 
 Route::get('/register',[UserController::class, 'registerPageView']);
 
@@ -103,3 +107,13 @@ Route::get('/appointment-reciving-pending-list',[OrderController::class, 'recivi
 Route::get('/appointment-recived-list',[OrderController::class, 'recivedList']);
 
 Route::get('/barchode-print',[PdfController::class, 'barcodePrint']);
+
+Route::post('/change-appointment',[OrderController::class, 'changeAppintment']);
+
+Route::get('/report-data',[OrderController::class, 'openReportData']);
+
+Route::post('/result-update',[OrderController::class, 'resultsSave']);
+
+Route::get('/report-print',[PdfController::class, 'reportPrint']);
+
+Route::get('/logout',[UserController::class, 'logout']);
