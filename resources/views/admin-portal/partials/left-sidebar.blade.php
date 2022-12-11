@@ -88,7 +88,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="appointment-verify-pending-list?type=verify&status=1">
+                    <a href="appointment-verified-list">
                         <i class="mdi mdi-view-dashboard-outline"></i>
                         <span class="badge bg-success rounded-pill float-end"></span>
                         <span> Verified Appointments </span>
@@ -98,7 +98,7 @@
                     <a href="appointment-reciving-pending-list">
                         <i class="mdi mdi-view-dashboard-outline"></i>
                         <span class="badge bg-success rounded-pill float-end"></span>
-                        <span> Reciving Reports  </span>
+                        <span> Reciving Pending Reports  </span>
                     </a>
                 </li>
                 <li>

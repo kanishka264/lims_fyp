@@ -48,7 +48,6 @@
                                             <th>Test Name</th>
                                             <th>Appointment Date</th>
                                             <th>Age</th>
-                                            <th>Barcode No</th>
                                             <th>Verified Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -64,9 +63,18 @@
                                                 <td><?php echo ucwords($value->test_title) ?> - <?php echo strtoupper($value->test_code) ?></td>
                                                 <td><?php echo $value->appointment_time ?></td>
                                                 <td><?php echo $value->age ?></td>
-                                                <td><?php echo $value->barcode ?></td>
-                                                <td>Pending</td>
-                                                <td><a href="report-data?id=<?php echo $value->id ?>&type=verify" class="btn btn-primary">View Repost</a></td>
+                                                <?php if($value->verified_status == 1){
+                                                    $msg = 'Verified';
+                                                }else{
+                                                    $msg = 'Pending';
+                                                }
+                                                    ?>
+                                                <td>{{ $msg }}</td>
+                                                <td>
+                                                    <button class="btn btn-success" onclick="verifyReport(<?php echo $value->id ?>)">Verify</button>
+                                                    <a href="report-data?id=<?php echo $value->id ?>&type=verify" class="btn btn-primary">View/Edit</a>
+                                                    <a href="{{url('/barchode-print?id=')}}{{$value->barcode}}" target="_blank" class="btn btn-info">Barcode</a>
+                                                </td>
                                             </tr>
 
                                         <?php
@@ -131,6 +139,51 @@
 <script src="{{ asset('admin/assets/libs/pdfmake/build/vfs_fonts.js')}}"></script>
 <!-- third party js ends -->
 <script src="{{ asset('admin/assets/js/pages/datatables.init.js')}}"></script>
+
+<script>
+    function verifyReport($id) {
+        $.ajax({
+            type: "POST",
+            url: '/verify-report',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: 'id='+$id+'&field=verified_status',
+            success: function(msg) {
+
+                if (msg[0].response_code == 200) {
+                    swal({
+                        title: 'Success!',
+                        text: msg[0].response_text,
+                        icon: 'success',
+                        timer: 2000,
+                        button: false
+                    });
+
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1500);
+
+                } else {
+                    swal({
+                        title: 'Error!',
+                        text: msg[0].response_text,
+                        icon: 'error',
+                        timer: 2000,
+                        button: false
+                    }).then(
+                        function() {},
+                        function(dismiss) {
+                            if (dismiss === 'timer') {}
+                        }
+                    )
+                }
+
+            }
+        });
+
+    }
+</script>
 </body>
 
 </html>

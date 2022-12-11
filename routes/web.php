@@ -8,6 +8,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\BraintreeController;
+use App\Http\Controllers\PdfController;
 use App\Http\Middleware;
 
 /*
@@ -92,3 +93,13 @@ Route::post('/update-user',[UserController::class, 'updateUserAdmin']);
 Route::get('/appointment-verify-pending-list',[OrderController::class, 'verificationPending']);
 
 Route::get('/report-data',[OrderController::class, 'reportPageView']);
+
+Route::post('/verify-report',[OrderController::class, 'verifyReport']);
+
+Route::get('/appointment-verified-list',[OrderController::class, 'verificationApproved']);
+
+Route::get('/appointment-reciving-pending-list',[OrderController::class, 'recivingPending']);
+
+Route::get('/appointment-recived-list',[OrderController::class, 'recivedList']);
+
+Route::get('/barchode-print',[PdfController::class, 'barcodePrint']);

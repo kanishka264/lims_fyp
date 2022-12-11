@@ -87,4 +87,10 @@ class Orders extends Model
             ->first();
         return $results;
     }
+
+    public function updateOrdersById($data, $id)
+    {
+        $results = DB::table('test_orders')->where('id', $id)->update($data);
+        return $results;
+    }
 }

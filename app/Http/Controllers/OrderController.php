@@ -124,11 +124,109 @@ class OrderController extends Controller
             $reportList = $this->order->getTestOrdersById(request()->get('id'));
 
             $patientData = $this->user->getById($reportList->patient_id);
-            $reportList->patient_name = $patientData->first_name . ' ' . $patientData->last_name;
+            $reportList->patientData = $patientData;
 
             $reportList->age = $this->common->age($patientData->date_of_birth);
 
             return view('admin-portal/report/'.$reportList->report_template, ['reportList' => $reportList]);
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    public function verifyReport(Request $request){
+        try{
+            $feild = $request->post('field');
+            $updateData = array(
+                $feild => 1,
+                'updated_at' => date('Y-m-d H:i:s')
+            );
+            $update = $this->order->updateOrdersById($updateData,$request->post('id'));
+
+            if ($update) {
+                $response[0]['response_code'] = 200;
+                $response[0]['response_text'] = 'Success';
+            } else {
+                $response[0]['response_code'] = 400;
+                $response[0]['response_text'] = "Something went wrong. Please try again!";
+            }
+            
+
+        }catch(Throwable $e){
+            $response[0]['response_code'] = 403;
+            $response[0]['response_text'] = $e->getMessage();
+        }
+
+        return $response;
+    }
+
+    public function verificationApproved()
+    {
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+
+            $status = 1;
+
+            $field = 'verified_status';
+
+            $reportList = $this->order->getByFieldValue($field, $status);
+
+            foreach ($reportList as $key => $value) {
+                $patientData = $this->user->getById($value->patient_id);
+                $reportList[$key]->patient_name = $patientData->first_name . ' ' . $patientData->last_name;
+
+                $reportList[$key]->age = $this->common->age($patientData->date_of_birth);
+            }
+            // dd($reportList);
+            return view('admin-portal/reservations/verified', ['reportList' => $reportList]);
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    public function recivingPending()
+    {
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+
+            $status = 0;
+
+            $field = 'recived_status';
+
+            $reportList = $this->order->getByFieldValue($field, $status);
+
+            foreach ($reportList as $key => $value) {
+                $patientData = $this->user->getById($value->patient_id);
+                $reportList[$key]->patient_name = $patientData->first_name . ' ' . $patientData->last_name;
+
+                $reportList[$key]->age = $this->common->age($patientData->date_of_birth);
+            }
+            // dd($reportList);
+            return view('admin-portal/reservations/reciving-pending', ['reportList' => $reportList]);
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    public function recivedList()
+    {
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+
+            $status = 1;
+
+            $field = 'recived_status';
+
+            $reportList = $this->order->getByFieldValue($field, $status);
+
+            foreach ($reportList as $key => $value) {
+                $patientData = $this->user->getById($value->patient_id);
+                $reportList[$key]->patient_name = $patientData->first_name . ' ' . $patientData->last_name;
+
+                $reportList[$key]->age = $this->common->age($patientData->date_of_birth);
+            }
+            // dd($reportList);
+            return view('admin-portal/reservations/recived', ['reportList' => $reportList]);
         } else {
 
             return redirect('/ portal-login');
