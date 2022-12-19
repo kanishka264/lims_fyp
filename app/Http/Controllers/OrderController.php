@@ -117,23 +117,23 @@ class OrderController extends Controller
         }
     }
 
-    public function reportPageView()
-    {
-        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+    // public function reportPageView()
+    // {
+    //     if (Auth::check() && session()->get('user_role_type') == 'admin') {
 
-            $reportList = $this->order->getTestOrdersById(request()->get('id'));
+    //         $reportList = $this->order->getTestOrdersById(request()->get('id'));
 
-            $patientData = $this->user->getById($reportList->patient_id);
-            $reportList->patientData = $patientData;
+    //         $patientData = $this->user->getById($reportList->patient_id);
+    //         $reportList->patientData = $patientData;
 
-            $reportList->age = $this->common->age($patientData->date_of_birth);
+    //         $reportList->age = $this->common->age($patientData->date_of_birth);
 
-            return view('admin-portal/report/'.$reportList->report_template, ['reportList' => $reportList]);
-        } else {
+    //         return view('admin-portal/report/'.$reportList->report_template, ['reportList' => $reportList]);
+    //     } else {
 
-            return redirect('/ portal-login');
-        }
-    }
+    //         return redirect('/ portal-login');
+    //     }
+    // }
 
     public function verifyReport(Request $request){
         try{

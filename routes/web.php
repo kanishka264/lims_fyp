@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\BraintreeController;
 use App\Http\Controllers\PdfController;
 use App\Http\Middleware;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -117,3 +118,13 @@ Route::post('/result-update',[OrderController::class, 'resultsSave']);
 Route::get('/report-print',[PdfController::class, 'reportPrint']);
 
 Route::get('/logout',[UserController::class, 'logout']);
+
+Route::get('/test-type-create',[TestController::class,'addView']);
+
+Route::post('/register-test',[TestController::class,'add']);
+
+Route::get('/test-type-list',[TestController::class,'view']);
+
+Route::get('/edit-test',[TestController::class,'editView']);
+
+Route::post('/update-test',[TestController::class,'update']);

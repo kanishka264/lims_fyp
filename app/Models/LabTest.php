@@ -23,4 +23,14 @@ class LabTest extends Model
             ->first();
         return $results;
     }
+
+    public function store($data){
+        $results = DB::table('lab_test_type')->insert($data);
+        return $results;
+    }
+
+    public function updateTest($data,$id){
+        $results = DB::table('lab_test_type')->where('id',$id)->update($data);
+        return $results;
+    }
 }

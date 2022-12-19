@@ -105,6 +105,24 @@
                 </li>
                 <?php endif; ?>
 
+                <li class="menu-title mt-2">test type management</li>
+                <?php if($log_user_data->user_role == 'admin'): ?>
+                <li class="active">
+                    <a href="test-type-create" >
+                        <i class="mdi mdi-view-dashboard-outline"></i>
+                        <span class="badge bg-success rounded-pill float-end"></span>
+                        <span> Test Create  </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="test-type-list">
+                        <i class="mdi mdi-view-dashboard-outline"></i>
+                        <span class="badge bg-success rounded-pill float-end"></span>
+                        <span> View Test </span>
+                    </a>
+                </li>
+                <?php endif; ?>
+
             </ul>
 
         </div>

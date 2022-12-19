@@ -30,56 +30,44 @@
             <div class="container-fluid">
 
                 <div class="row">
-
-
-                    <div class="col-lg-12">
+                    <div class="col-12">
                         <div class="card">
                             <div class="card-body">
+                                <h4 class="header-title">Create new test</h4>
+                                <p class="text-muted font-13"></p>
 
-                                <h4 class="mb-3 header-title">{{ $test_data->test_title}} - {{ $test_data->test_code}}</h4>
-
-                                <form class="form-horizontal" id="submit_form">
-                                    <?php
-                                    $field_set = explode(',', $test_type->test_field);
-                                    ?>
-                                    <?php foreach ($field_set as $key => $value) {
-                                        $current_val = '';
-                                        if($test_data->results){
-                                            $valueArray = json_decode($test_data->results);
-                                            
-                                           
-                                            if(isset($valueArray->$value)){
-                                                $current_val = $valueArray->$value;
-                                            }
-                                        }
-
-                                        
-                                    ?>
-                                        <div class="row mb-3">
-                                            <label for="inputEmail3" class="col-4 col-xl-3 col-form-label">{{ $value }}</label>
-                                            <div class="col-8 col-xl-9">
-
-                                                <input type="text" class="form-control" id="inputEmail3"  name="{{ $value }}" value="{{$current_val}}">
-                                            </div>
+                                <form id="register_form">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="inputEmail4" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="inputEmail4" name="test_title">
                                         </div>
-                                    <?php
-
-                                    } ?>
-
-                                    <input type="hidden" name="id" value="{{$test_data->id}}">
-                                    <input type="hidden" name="test_id" value="{{$test_data->test_id}}">
-                                    
-                                    <div class="justify-content-end row">
-                                        <div class="col-8 col-xl-9">
-                                            <button type="submit" class="btn btn-info waves-effect waves-light">Update</button>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="inputPassword4" class="form-label">Test Code</label>
+                                            <input type="text" class="form-control" id="inputPassword4" name="test_code">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="inputPassword4" class="form-label">Amount</label>
+                                            <input type="number" class="form-control" id="inputPassword4" name="amount">
                                         </div>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="inputEmail4" class="form-label">Feilds <small>Separate each field by comma</small></label>
+                                            <input type="text" class="form-control" id="inputEmail4" name="test_field">
+                                        </div>
+                                        
+                                    </div>
+
+                                
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Create</button>
+
                                 </form>
 
                             </div> <!-- end card-body -->
-                        </div> <!-- end card -->
+                        </div> <!-- end card-->
                     </div> <!-- end col -->
-
                 </div>
 
 
@@ -117,15 +105,14 @@
 
 <!-- App js-->
 <script src="{{ asset('admin/assets/js/app.min.js')}}"></script>
-
 <script>
-    $('#submit_form').on('submit', function(e) {
+    $('#register_form').on('submit', function(e) {
 
         e.preventDefault();
 
         $.ajax({
             type: "POST",
-            url: '/result-update',
+            url: '/register-test',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -141,7 +128,9 @@
                         button: false
                     });
 
-                    location.href = "appointment-verify-pending-list";
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1500);
 
                 } else {
                     swal({
@@ -163,7 +152,6 @@
 
     });
 </script>
-
 </body>
 
 </html>
