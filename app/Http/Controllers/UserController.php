@@ -51,10 +51,10 @@ class UserController extends Controller
 
             $store = $this->user->insert($userData);
             if ($store) {
-                $sendSms = $this->sms->send($request->post('mobile'), $otp);
+                $sendSms = $this->sms->send(trim($request->post('mobile'), "0"), $otp);
                 $response[0]['response_code'] = 200;
                 $response[0]['response_text'] = "Successfully saved";
-                $response[0]['mobile'] = $request->post('mobile');
+                $response[0]['mobile'] = trim($request->post('mobile'), "0");
             } else {
                 $response[0]['response_code'] = 400;
                 $response[0]['response_text'] = "Something went wrong. Please try again";
@@ -122,12 +122,14 @@ class UserController extends Controller
     public function patientLogin(Request $request)
     {
         try {
-            $user = $this->user->getByMobile($request->post('mobile'));
+            $mobile_no = ltrim($request->post('mobile'), "0"); 
+            $user = $this->user->getByMobile($mobile_no);
             if ($user) {
 
                 $otp = $this->common->getOtp();
                 $userData = array(
                     'remember_token' => md5($otp),
+                    'password' => Hash::make($otp),
                     'updated_at' => date("Y-m-d H:i:s")
                 );
 
@@ -136,10 +138,10 @@ class UserController extends Controller
                 $store = $this->user->updateUser($userData, $id);
 
                 if ($store) {
-                    $sendSms = $this->sms->send($request->post('mobile'), $otp);
+                    $sendSms = $this->sms->send($mobile_no, $otp);
                     $response[0]['response_code'] = 200;
                     $response[0]['response_text'] = "Successfully saved";
-                    $response[0]['mobile'] = $request->post('mobile');
+                    $response[0]['mobile'] = $mobile_no;
                 } else {
                     $response[0]['response_code'] = 400;
                     $response[0]['response_text'] = "Something went wrong. Please try again";
