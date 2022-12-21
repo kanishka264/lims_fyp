@@ -69,15 +69,12 @@ Route::get('/barcode',function(){
 // Route::any('/payment', [BraintreeController::class, 'token'])->name('token')->middleware('auth');
 
 
-Route::get('/portal-login',[UserController::class, 'adminLoginPage']);
+Route::get('/portal-login',[UserController::class, 'adminLoginPage'])->name('login');
 
 
 Route::post('/login-admin',[UserController::class, 'adminLogin']);
 
-
-Route::get('/admin-portal', function () {
-    return view('admin-portal/index');
-});
+Route::get('/admin-portal',[UserController::class,'adminDashboard'])->middleware('auth');
 
 Route::get('/create-patient',[UserController::class, 'createPationPage']);
 Route::get('/patients-list',[UserController::class, 'viewPationListPage']);

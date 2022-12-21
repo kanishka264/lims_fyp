@@ -45,18 +45,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function insert($data){
+    public function insert($data)
+    {
         $status = DB::table('users')->insert($data);
         return $status;
     }
 
-    public function updateUser($data,$id){
+    public function updateUser($data, $id)
+    {
 
         $status = DB::table('users')->where('id', $id)->update($data);
         return $status;
     }
 
-    public function verifyOtp($mobile,$otp){
+    public function verifyOtp($mobile, $otp)
+    {
         $results = DB::table('users')
             ->where('mobile', '=', $mobile)
             ->where('remember_token', '=', md5($otp))
@@ -64,26 +67,35 @@ class User extends Authenticatable
         return $results;
     }
 
-    public function getByMobile($mobile){
+    public function getByMobile($mobile)
+    {
         $results = DB::table('users')
             ->where('mobile', '=', $mobile)
             ->first();
         return $results;
     }
 
-    public function getById($id){
+    public function getById($id)
+    {
         $results = DB::table('users')
             ->where('id', '=', $id)
             ->first();
         return $results;
     }
 
-    public function getByUserCategory($cat){
+    public function getByUserCategory($cat)
+    {
         $results = DB::table('users')
             ->where('user_role', '=', $cat)
             ->get();
         return $results;
     }
 
-
+    public function getCountByUserType($type)
+    {
+        $results = DB::table('users')
+            ->where('user_role', '=', $type)
+            ->count();
+        return $results;
+    }
 }

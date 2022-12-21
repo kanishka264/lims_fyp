@@ -71,7 +71,7 @@ class Orders extends Model
             ->select('test_orders.*', 'lab_test_type.test_title', 'lab_test_type.test_code', 'lab_test_type.report_template')
             ->join('lab_test_type', 'test_orders.test_id', '=', 'lab_test_type.id')
             ->where('test_orders.payment_status', '=', '1000')
-            ->where('test_orders.'.$field, '=', $status)
+            ->where('test_orders.' . $field, '=', $status)
             ->orderBy('test_orders.id', 'DESC')
             ->get();
         return $results;
@@ -100,6 +100,29 @@ class Orders extends Model
             ->select('*')
             ->where('barcode', '=', $id)
             ->first();
+        return $results;
+    }
+
+    public function getActiveOrderCount()
+    {
+        $results = DB::table('test_orders')
+            ->where('verified_status', '=', 0)
+            ->count();
+        return $results;
+    }
+
+    public function getTotalRevenue()
+    {
+        $results = DB::table('payments')->where('response_text', 'Approved')->sum('paid_amount');
+        return $results;
+    }
+
+    public function getDailyRevenue()
+    {
+        $from = date('Y-m-d').' 00:00:00';
+        $to = date('Y-m-d').' 23:59:59';
+
+        $results = DB::table('payments')->where('response_text', 'Approved')->whereBetween('created_at', [$from,$to])->sum('paid_amount');
         return $results;
     }
 }

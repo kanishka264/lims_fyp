@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Throwable;
 use App\Models\User;
 use App\Models\Common;
+use App\Models\Orders;
 use App\Models\SMS;
 use App\Models\UserSession;
 use Illuminate\Support\Facades\Validator;
@@ -23,6 +24,7 @@ class UserController extends Controller
         $this->common = new Common();
         $this->sms = new SMS();
         $this->session = new UserSession();
+        $this->order =  new Orders();
     }
 
     public function registerPageView()
@@ -191,6 +193,15 @@ class UserController extends Controller
         return $response;
     }
 
+    public function adminDashboard(Request $request){
+        $total_patient_count = $this->user->getCountByUserType('patient');
+        $pending_appoinment_count = $this->order->getActiveOrderCount();
+        $total_revenue = $this->order->getTotalRevenue();
+        $daily_sale = $this->order->getDailyRevenue();
+       
+        return view('admin-portal/index',['total_patient_count'=>$total_patient_count,'pending_appoinment_count'=>$pending_appoinment_count,'total_revenue'=>$total_revenue,'daily_sale'=>$daily_sale]);
+    }
+
     public function adminLogin(Request $request)
     {
         $this->validate($request, [
@@ -200,7 +211,7 @@ class UserController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials)){
             session(['user_role_type' => 'admin']);
             $response[0]['response_code'] = 200;
             $response[0]['response_text'] = "Success";
