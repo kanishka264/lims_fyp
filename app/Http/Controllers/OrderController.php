@@ -301,4 +301,81 @@ class OrderController extends Controller
         }
         return $response;
     }
+
+    public function makeAppoinmnet(){
+        if (Auth::check() && session()->get('user_role_type') == 'admin') {
+            $patient_list = $this->user->getByUserCategory('patient');
+            $test_list = $this->labtest->getTestingList();
+            return view('admin-portal/reservations/create',['patient_list'=>$patient_list,'test_list'=>$test_list]);
+        } else {
+
+            return redirect('/ portal-login');
+        }
+    }
+
+    public function getTestPricee(Request $request){
+        $test_id = $request->post('test_id');
+        $testData = $this->labtest->getById($test_id);
+        $response[0]['amount'] = $testData->amount;
+        return $response;
+    }
+
+    public function saveManualAppointment(Request $request){
+
+        $now = date("Y-m-d H:i:s");
+        $appointmentDate = date("Y-m-d H:i:s", strtotime('+24 hours', strtotime($now))); 
+
+        $orderData = array(
+            'patient_id' => $request->post('patient_id'),
+            'no_of_test' => 1,
+            'created_at' => date('Y-m-d H:i:s')
+        );
+
+        $order_id = $this->order->saveOrder($orderData);
+
+        $testOrderData = array(
+            'order_no' => $order_id,
+            'patient_id' => $request->post('patient_id'),
+            'test_id' => $request->post('test_id'),
+            'fee' => $request->post('paid_amount'),
+            'payment_status'=>'1000',
+            'payment_referance'=>'Manual Payment',
+            'appointment_time'=>$appointmentDate,
+            'created_at' => date('Y-m-d H:i:s')
+        );
+
+        $testOrderId = $this->order->saveTestOrder($testOrderData);
+        $barcode = $this->common->generateBarcode($testOrderId);
+        $barcodeData = array(
+            'barcode' => $barcode,
+            'updated_at' => date('Y-m-d H:i:s')
+        );
+
+        $updateOrder = $this->order->updateTestOrder($barcodeData, $testOrderId);
+
+        $paymentData = array(
+            'payment_id'=>'manual',
+            'paid_amount'=>$request->post('paid_amount'),
+            'response_text'=>'Approved',
+            'response_code'=>'1000',
+            'order_no'=> $order_id,
+            'patient_id'=>$request->post('patient_id'),
+            'created_at'=> date('Y-m-d H:i:s')
+        );
+
+        $storePayement = $this->order->savePayment($paymentData);
+
+        if ($updateOrder) {
+            $response[0]['response_code'] = 200;
+            $response[0]['response_text'] = 'Success';
+        } else {
+            $response[0]['response_code'] = 400;
+            $response[0]['response_text'] = "Something went wrong. Please try again!";
+        }
+
+        return $response;
+
+    }
+
+    
 }

@@ -24,7 +24,7 @@
                 <li class="menu-title">Dashboard</li>
 
                 <li>
-                    <a href="">
+                    <a href="{{url('admin-portal')}}">
                         <i class="mdi mdi-view-dashboard-outline"></i>
                         <span class="badge bg-success rounded-pill float-end"></span>
                         <span> Dashboard </span>
@@ -71,6 +71,15 @@
                 </li>
 
                 <li class="menu-title mt-2">appointments management</li>
+
+                <li>
+                    <a href="make-appoinment">
+                        <i class="mdi mdi-view-dashboard-outline"></i>
+                        <span class="badge bg-success rounded-pill float-end"></span>
+                        <span> Make Appointment  </span>
+                    </a>
+                </li>
+                    
                 <?php if($log_user_data->user_role == 'admin'): ?>
                 <li class="active">
                     <a href="appointment-verify-pending-list" >
@@ -87,6 +96,7 @@
                     </a>
                 </li>
                 <?php endif; ?>
+                
 
                 <?php if($log_user_data->user_role == 'receptionist'): ?>
                 <li>

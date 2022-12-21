@@ -125,3 +125,9 @@ Route::get('/test-type-list',[TestController::class,'view']);
 Route::get('/edit-test',[TestController::class,'editView']);
 
 Route::post('/update-test',[TestController::class,'update']);
+
+Route::get('/make-appoinment',[OrderController::class, 'makeAppoinmnet']);
+
+Route::post('/make-appointment',[OrderController::class, 'saveManualAppointment']);
+
+Route::post('/get-test-price',[OrderController::class, 'getTestPricee']);
