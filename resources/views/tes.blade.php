@@ -36,5 +36,8 @@ $dataset = "http://localhost:8000/report-print?id=4855047604150";
   
 <img src="data:image/png;base64,{{ base64_encode($generatorPNG->getBarcode($dataset, $generatorPNG::TYPE_CODE_128)) }}">
 
+
+
+
 </body>
 </html>

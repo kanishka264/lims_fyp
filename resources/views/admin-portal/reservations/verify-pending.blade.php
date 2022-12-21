@@ -169,7 +169,7 @@
                         title: 'Error!',
                         text: msg[0].response_text,
                         icon: 'error',
-                        timer: 2000,
+                        // timer: 2000,
                         button: false
                     }).then(
                         function() {},

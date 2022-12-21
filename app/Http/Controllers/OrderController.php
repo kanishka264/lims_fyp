@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Models\Orders;
 use App\Models\SMS;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail as FacadesMail;
+use Mail;
 
 class OrderController extends Controller
 {
@@ -137,24 +139,27 @@ class OrderController extends Controller
     //     }
     // }
 
-    public function verifyReport(Request $request){
-        try{
+    public function verifyReport(Request $request)
+    {
+        try {
             $feild = $request->post('field');
             $updateData = array(
                 $feild => 1,
                 'updated_at' => date('Y-m-d H:i:s')
             );
-            $update = $this->order->updateOrdersById($updateData,$request->post('id'));
+            $update = $this->order->updateOrdersById($updateData, $request->post('id'));
 
 
-            if($feild == 'verified_status'){
+            if ($feild == 'verified_status') {
                 $test_data = $this->order->getTestOrdersById($request->post('id'));
                 $patientData = $this->user->getById($test_data->patient_id);
-                
-                if(env('SMS_ON') == 1){
-                    $send = $this->sms->send($patientData->mobile,'Test report ready');
+
+                if (env('SMS_ON') == 1) {
+                    $send = $this->sms->send($patientData->mobile, 'Test report ready');
                 }
-                
+
+                $url = 'Report URL :' . env('APP_URL') . '/report-print?id=' . $test_data->barcode;
+
             }
 
             if ($update) {
@@ -164,9 +169,7 @@ class OrderController extends Controller
                 $response[0]['response_code'] = 400;
                 $response[0]['response_text'] = "Something went wrong. Please try again!";
             }
-            
-
-        }catch(Throwable $e){
+        } catch (Throwable $e) {
             $response[0]['response_code'] = 403;
             $response[0]['response_text'] = $e->getMessage();
         }
@@ -246,13 +249,14 @@ class OrderController extends Controller
         }
     }
 
-    public function changeAppintment(Request $request){
-        try{
+    public function changeAppintment(Request $request)
+    {
+        try {
             $updateData = array(
                 'appointment_time' => $request->post('date'),
                 'updated_at' => date('Y-m-d H:i:s')
             );
-            $update = $this->order->updateOrdersById($updateData,$request->post('id'));
+            $update = $this->order->updateOrdersById($updateData, $request->post('id'));
 
             if ($update) {
                 $response[0]['response_code'] = 200;
@@ -261,43 +265,43 @@ class OrderController extends Controller
                 $response[0]['response_code'] = 400;
                 $response[0]['response_text'] = "Something went wrong. Please try again!";
             }
-        }catch(Throwable $e){
+        } catch (Throwable $e) {
             $response[0]['response_code'] = 403;
             $response[0]['response_text'] = $e->getMessage();
         }
         return $response;
     }
 
-    public function openReportData(){
+    public function openReportData()
+    {
         if (Auth::check() && session()->get('user_role_type') == 'admin') {
             $test_data = $this->order->getTestOrdersById(request()->get('id'));
             $test_type = $this->labtest->getById($test_data->test_id);
 
-            return view('admin-portal/report/report',['test_data'=>$test_data,'test_type'=>$test_type]);
+            return view('admin-portal/report/report', ['test_data' => $test_data, 'test_type' => $test_type]);
         } else {
 
             return redirect('/ portal-login');
         }
     }
 
-    public function resultsSave(Request $request){
-        try{
+    public function resultsSave(Request $request)
+    {
+        try {
             $test_type = $this->labtest->getById($request->post('test_id'));
             $field_set = explode(',', $test_type->test_field);
 
             $data = array();
-            foreach ($field_set as $key => $value){
+            foreach ($field_set as $key => $value) {
 
                 $data[$value] = $request->post($value);
-                
-
             }
 
             $updateData = array(
                 'results' => $data,
                 'updated_at' => date('Y-m-d H:i:s')
             );
-            $update = $this->order->updateOrdersById($updateData,$request->post('id'));
+            $update = $this->order->updateOrdersById($updateData, $request->post('id'));
 
             if ($update) {
                 $response[0]['response_code'] = 200;
@@ -306,37 +310,38 @@ class OrderController extends Controller
                 $response[0]['response_code'] = 400;
                 $response[0]['response_text'] = "Something went wrong. Please try again!";
             }
-           
-
-        }catch(Throwable $e){
+        } catch (Throwable $e) {
             $response[0]['response_code'] = 403;
             $response[0]['response_text'] = $e->getMessage();
         }
         return $response;
     }
 
-    public function makeAppoinmnet(){
+    public function makeAppoinmnet()
+    {
         if (Auth::check() && session()->get('user_role_type') == 'admin') {
             $patient_list = $this->user->getByUserCategory('patient');
             $test_list = $this->labtest->getTestingList();
-            return view('admin-portal/reservations/create',['patient_list'=>$patient_list,'test_list'=>$test_list]);
+            return view('admin-portal/reservations/create', ['patient_list' => $patient_list, 'test_list' => $test_list]);
         } else {
 
             return redirect('/ portal-login');
         }
     }
 
-    public function getTestPricee(Request $request){
+    public function getTestPricee(Request $request)
+    {
         $test_id = $request->post('test_id');
         $testData = $this->labtest->getById($test_id);
         $response[0]['amount'] = $testData->amount;
         return $response;
     }
 
-    public function saveManualAppointment(Request $request){
+    public function saveManualAppointment(Request $request)
+    {
 
         $now = date("Y-m-d H:i:s");
-        $appointmentDate = date("Y-m-d H:i:s", strtotime('+24 hours', strtotime($now))); 
+        $appointmentDate = date("Y-m-d H:i:s", strtotime('+24 hours', strtotime($now)));
 
         $orderData = array(
             'patient_id' => $request->post('patient_id'),
@@ -351,9 +356,9 @@ class OrderController extends Controller
             'patient_id' => $request->post('patient_id'),
             'test_id' => $request->post('test_id'),
             'fee' => $request->post('paid_amount'),
-            'payment_status'=>'1000',
-            'payment_referance'=>'Manual Payment',
-            'appointment_time'=>$appointmentDate,
+            'payment_status' => '1000',
+            'payment_referance' => 'Manual Payment',
+            'appointment_time' => $appointmentDate,
             'created_at' => date('Y-m-d H:i:s')
         );
 
@@ -367,13 +372,13 @@ class OrderController extends Controller
         $updateOrder = $this->order->updateTestOrder($barcodeData, $testOrderId);
 
         $paymentData = array(
-            'payment_id'=>'manual',
-            'paid_amount'=>$request->post('paid_amount'),
-            'response_text'=>'Approved',
-            'response_code'=>'1000',
-            'order_no'=> $order_id,
-            'patient_id'=>$request->post('patient_id'),
-            'created_at'=> date('Y-m-d H:i:s')
+            'payment_id' => 'manual',
+            'paid_amount' => $request->post('paid_amount'),
+            'response_text' => 'Approved',
+            'response_code' => '1000',
+            'order_no' => $order_id,
+            'patient_id' => $request->post('patient_id'),
+            'created_at' => date('Y-m-d H:i:s')
         );
 
         $storePayement = $this->order->savePayment($paymentData);
@@ -387,8 +392,5 @@ class OrderController extends Controller
         }
 
         return $response;
-
     }
-
-    
 }
