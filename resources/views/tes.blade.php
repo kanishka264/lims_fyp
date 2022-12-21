@@ -21,5 +21,20 @@
 @endphp
   
 <img src="data:image/png;base64,{{ base64_encode($generatorPNG->getBarcode('000005263635', $generatorPNG::TYPE_CODE_128)) }}">
+
+
+
+<h3>Product 2: 000005263635</h3>
+@php
+    $generatorPNG = new Picqer\Barcode\BarcodeGeneratorPNG();
+@endphp
+
+<?php
+$dataset = "http://localhost:8000/report-print?id=4855047604150";
+
+?>
+  
+<img src="data:image/png;base64,{{ base64_encode($generatorPNG->getBarcode($dataset, $generatorPNG::TYPE_CODE_128)) }}">
+
 </body>
 </html>

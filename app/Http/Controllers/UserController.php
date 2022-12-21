@@ -140,7 +140,11 @@ class UserController extends Controller
                 $store = $this->user->updateUser($userData, $id);
 
                 if ($store) {
-                    $sendSms = $this->sms->send($mobile_no, $otp);
+                    if(env('SMS_ON') == 1){
+                        $sendSms = $this->sms->send($mobile_no, $otp);
+                    }
+
+                    
                     $response[0]['response_code'] = 200;
                     $response[0]['response_text'] = "Successfully saved";
                     $response[0]['mobile'] = $mobile_no;

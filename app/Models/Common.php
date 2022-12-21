@@ -14,7 +14,12 @@ class Common extends Model
 
     public function getOtp()
     {
-        $randomNo = rand(1000, 9999);
+        if(env('SMS_ON') == 1){
+            $randomNo = rand(1000, 9999);
+        }else{
+            $randomNo = 1234;
+        }
+        
         return $randomNo;
     }
 

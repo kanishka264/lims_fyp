@@ -10,6 +10,7 @@ use App\Models\UserSession;
 use App\Models\LabTest;
 use App\Models\User;
 use App\Models\Orders;
+use App\Models\SMS;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -21,6 +22,7 @@ class OrderController extends Controller
         $this->user = new User();
         $this->order = new Orders();
         $this->common = new Common();
+        $this->sms = new SMS();
     }
 
     public function orderPlace(Request $request)
@@ -143,6 +145,17 @@ class OrderController extends Controller
                 'updated_at' => date('Y-m-d H:i:s')
             );
             $update = $this->order->updateOrdersById($updateData,$request->post('id'));
+
+
+            if($feild == 'verified_status'){
+                $test_data = $this->order->getTestOrdersById($request->post('id'));
+                $patientData = $this->user->getById($test_data->patient_id);
+                
+                if(env('SMS_ON') == 1){
+                    $send = $this->sms->send($patientData->mobile,'Test report ready');
+                }
+                
+            }
 
             if ($update) {
                 $response[0]['response_code'] = 200;

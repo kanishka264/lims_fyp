@@ -131,3 +131,4 @@ Route::get('/make-appoinment',[OrderController::class, 'makeAppoinmnet']);
 Route::post('/make-appointment',[OrderController::class, 'saveManualAppointment']);
 
 Route::post('/get-test-price',[OrderController::class, 'getTestPricee']);
+
